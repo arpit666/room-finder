@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "636595594750",
+    "project_id": "room-finder-8ab2b",
+    "storage_bucket": "room-finder-8ab2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636595594750:android:1b1a30c6367687766b4caf",
+        "android_client_info": {
+          "package_name": "com.example.room_finder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636595594750-tr5ujhq8v6s429ivgrveubmierjtdtcs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbmGqEdGW6feOrTPFeDpZfn2H0mrXgqc0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636595594750-tr5ujhq8v6s429ivgrveubmierjtdtcs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "636595594750-vaido0h7d6jj41835fg3vqh3ht3rtovk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.roomFinder"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
