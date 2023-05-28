@@ -5,7 +5,8 @@ import 'num_text_formatter.dart';
 class PriceTextField extends StatelessWidget {
   final TextEditingController myController ;
   final String hintText;
-  const PriceTextField({Key? key, required this.myController, required this.hintText}) : super(key: key);
+  final bool isPrice;
+  const PriceTextField({Key? key,required this.isPrice, required this.myController, required this.hintText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +16,9 @@ class PriceTextField extends StatelessWidget {
         controller: myController,
         keyboardType: TextInputType.number,
         inputFormatters: [
-          NumericTextFormatter(),
-          LengthLimitingTextInputFormatter(20),
+          if(isPrice) NumericTextFormatter(),
+
+          LengthLimitingTextInputFormatter(10),
         ],
         decoration: InputDecoration(
             fillColor: Colors.grey.shade200,

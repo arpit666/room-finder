@@ -108,6 +108,8 @@ class _ImageUploaderState extends State<ImageUploader> {
       'hasFCCTV' : false,
       'userId' : "new",
       'roomId': "room",
+      'popularity': 0,
+      'timestamp': FieldValue.serverTimestamp(),
       'imageUrls': []});
 
     await roomDocument.update({'imageUrls': downloadUrls});

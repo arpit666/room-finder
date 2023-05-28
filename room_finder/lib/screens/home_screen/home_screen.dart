@@ -31,8 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isSearching = false;
 
   String name = '';
+  bool isOwner = false;
 
   List searchList =[];
+  SortingOption _selectedSortingOption = SortingOption.Popularity;
 
    List rooms = [
     // Room(
@@ -84,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final userDocData = userDocSnapshot.data() as Map<String, dynamic>;
     setState(() {
       name = userDocData['name'];
+      isOwner = userDocData['role'] == 'owner';
 
     });
   }
@@ -91,6 +94,47 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isRoomFavorite(String roomId) {
     return _favoriteRoomIds.contains(roomId);
   }
+  void _sortRooms() {
+    setState(() {
+      switch (_selectedSortingOption) {
+        case SortingOption.PriceAsc:
+          rooms.sort((a, b) {
+            double priceA = _extractPrice(a);
+            double priceB = _extractPrice(b);
+            return priceA.compareTo(priceB);
+          });
+          break;
+        case SortingOption.PriceDesc:
+          rooms.sort((a, b) {
+            double priceA = _extractPrice(a);
+            double priceB = _extractPrice(b);
+            return priceB.compareTo(priceA);
+          });
+          break;
+        case SortingOption.Popularity:
+          rooms.sort((a, b) => b.popularity.compareTo(a.popularity));
+          break;
+        case SortingOption.Latest:
+          rooms.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+          break;
+      }
+    });
+  }
+
+  double _extractPrice(Room room) {
+    String cleanPrice(String price) {
+      return price.replaceAll(RegExp(r'[^0-9.]'), '');
+    }
+
+    if (room.priceSingle != '0') {
+      return double.parse(cleanPrice(room.priceSingle));
+    } else if (room.priceTwin != '0') {
+      return double.parse(cleanPrice(room.priceTwin));
+    } else {
+      return double.parse(cleanPrice(room.priceThree));
+    }
+  }
+
 
   void showLoadingDialog(BuildContext context) {
     showDialog(
@@ -114,7 +158,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }), (Route<dynamic> route) => false);
     await FirebaseAuth.instance.signOut();
     await _googleSignIn.signOut();
-
 
   }
 
@@ -157,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       rooms = filteredRooms;
     });
+    _sortRooms();
 
     hideLoadingDialog();
   }
@@ -177,6 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final searchTextValue = searchText.text.trim().toLowerCase();
 
+
     List<Room> filteredRooms = allRooms
         .where((room) =>
     (room.title?.toLowerCase()?.contains(searchTextValue) ?? false) ||
@@ -186,6 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       rooms = filteredRooms;
     });
+    _sortRooms();
     hideLoadingDialog();
   }
 
@@ -214,19 +260,25 @@ class _HomeScreenState extends State<HomeScreen> {
           }else{
             await _getRoomsInSearchedLocation();
           }
-        }, icon: Icon(Icons.logout))],
+        }, icon: Icon(Icons.refresh)),
+
+
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 10),
-            Text(
-              'Find your sweet PG',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineLarge!
-                  .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                'Find your sweet PG',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineLarge!
+                    .copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
             GestureDetector(
               onTap: (){
@@ -246,7 +298,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             if(searchText.text.isEmpty){
                               await _getRoomsInCurrentLocation();
                             }else{
-                              await _getRoomsInSearchedLocation();
+                              final searchTextValue = searchText.text.trim().toLowerCase();
+                              if(searchTextValue.length < 3){
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text('Enter at least 3 character'),
+                                      );
+                                    });
+                              }else{
+                                await _getRoomsInSearchedLocation();
+                              }
+
                             }
                           },
 
@@ -263,6 +327,94 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            (searchText.text.isEmpty) ?
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Near You',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge!
+                        .copyWith(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  DropdownButton<SortingOption>(
+                    //value: _selectedSortingOption,
+
+                    icon: Icon(Icons.sort),
+                    onChanged: (SortingOption? newValue) {
+                      setState(() {
+                        _selectedSortingOption = newValue!;
+                        _sortRooms();
+                      });
+                    },
+                    items: [
+                      DropdownMenuItem(
+                        value: SortingOption.Popularity,
+                        child: Text('Popularity'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.PriceAsc,
+                        child: Text('Price (Low to High)'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.PriceDesc,
+                        child: Text('Price (High to Low)'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.Latest,
+                        child: Text('Latest'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ): Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Search Result',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge!
+                        .copyWith(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  DropdownButton<SortingOption>(
+                    //value: _selectedSortingOption,
+                    icon: Icon(Icons.sort),
+                    onChanged: (SortingOption? newValue) {
+                      setState(() {
+                        _selectedSortingOption = newValue!;
+                        _sortRooms();
+                      });
+                    },
+                    items: [
+                      DropdownMenuItem(
+                        value: SortingOption.Popularity,
+                        child: Text('Popularity'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.PriceAsc,
+                        child: Text('Price (Low to High)'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.PriceDesc,
+                        child: Text('Price (High to Low)'),
+                      ),
+                      DropdownMenuItem(
+                        value: SortingOption.Latest,
+                        child: Text('Latest'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            rooms.isNotEmpty ?
             Expanded(
               child: ListView.builder(
                 itemCount: rooms.length,
@@ -271,7 +423,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return RoomTile(room: room,isFavorited: _isRoomFavorite(room.roomId!),isFavScreen: false,);
                 },
               ),
-            ),
+            ) : Expanded(child: Center(child: Text('No Rooms Found!!',style: TextStyle(fontSize: 18),),)),
           ],
         ),
       ),
@@ -280,4 +432,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+enum SortingOption {
+  PriceAsc,
+  PriceDesc,
+  Popularity,
+  Latest,
 }

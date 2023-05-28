@@ -329,6 +329,7 @@ class _AddNewRoomScreenState extends State<AddNewRoomScreen> {
                         PriceTextField(
                           myController: singlePriceController,
                           hintText: 'Single Room Price',
+                          isPrice: true,
                         ),
                       SizedBox(
                         height: 10,
@@ -337,6 +338,7 @@ class _AddNewRoomScreenState extends State<AddNewRoomScreen> {
                         PriceTextField(
                           myController: doublePriceController,
                           hintText: 'Double Sharing Room Price',
+                          isPrice: true
                         ),
                       SizedBox(
                         height: 10,
@@ -345,6 +347,7 @@ class _AddNewRoomScreenState extends State<AddNewRoomScreen> {
                         PriceTextField(
                           myController: triplePriceController,
                           hintText: 'Triple Sharing Room Price',
+                          isPrice: true
                         ),
                       SizedBox(
                         height: 10,

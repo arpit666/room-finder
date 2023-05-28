@@ -31,6 +31,7 @@ class _RoomTileState extends State<RoomTile> {
 
 
   void _navigateToDetailScreen(BuildContext context) {
+    increasePopularity();
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => DetailScreen(room: widget.room),
@@ -103,6 +104,19 @@ class _RoomTileState extends State<RoomTile> {
     } catch (e) {
       // Handle the error
     }
+  }
+  void increasePopularity() async{
+    final roomDoc = FirebaseFirestore.instance.collection('rooms').doc(widget.room.roomId);
+    int pp = widget.room.popularity++;
+    await roomDoc.update({
+      'popularity': pp
+    });
+  }
+
+  @override
+  void initState() {
+    increasePopularity();
+    super.initState();
   }
 
 

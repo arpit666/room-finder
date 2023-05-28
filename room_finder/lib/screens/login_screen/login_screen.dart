@@ -100,6 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
     DocumentReference userDocument = usersCollection.doc(userId);
 
     // Add the user details as fields to the document
+
     await userDocument.set({
       'name': name,
       'email': email,
@@ -109,7 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
       'about':'About text',
       'userId':userId,
       'pushToken' : 'Push Added',
-      'chatIds':[]
+      'chatIds':[],
+      'role':'user'
 
     });
   }
@@ -221,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 50,
+                  height: 30,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -234,31 +236,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(
                       width: 25,
                     ),
-                    SquareTile(
-                        onTap: () {}, imagePath: 'assets/images/apple.png'),
                   ],
                 ),
                 const SizedBox(
                   height: 25,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Not a member?',
-                      style: TextStyle(color: Colors.grey.shade700),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    GestureDetector(
-                      onTap: widget.onTap,
-                      child: Text(
-                        'Register Now',
-                        style: TextStyle(color: Colors.lightBlue),
+                Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Not a member?',
+                        style: TextStyle(color: Colors.grey.shade700),
                       ),
-                    ),
-                  ],
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      GestureDetector(
+                        onTap: widget.onTap,
+                        child: Text(
+                          'Register Now',
+                          style: TextStyle(color: Colors.lightBlue),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

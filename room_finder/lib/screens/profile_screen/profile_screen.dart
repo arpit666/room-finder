@@ -13,6 +13,7 @@ import 'dart:io';
 
 import '../../model/room.dart';
 import '../../model/user_model.dart';
+import '../chat_screen/components/apis.dart';
 import 'my_rooms.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
    late String userMail  ;
    late String userPhone;
    late String userProf ;
-   
+   late String role ;
    bool _isLoading = true;
 
 
@@ -43,11 +44,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         userMail = userDoc.get('email');
         userPhone = userDoc.get('phone');
         userProf = userDoc.get('profile_picture');
+        role = userDoc.get('role');
       }else{
         userName = 'Profile Name';
         userMail = 'Profile Mail';
         userPhone = '446';
         userProf = '';
+        role = 'user';
       }
 
 
@@ -77,8 +80,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await _googleSignIn.signOut();
   }
 
+
+  Future getDetails() async {
+    final userDocRef =
+    FirebaseFirestore.instance.collection('users').doc(APIs.user.uid);
+    final userDocSnapshot = await userDocRef.get();
+    final userDocData = userDocSnapshot.data() as Map<String, dynamic>;
+    setState(() {
+      role = userDocData['role'];
+    });
+  }
+
   @override
   void initState() {
+    getDetails();
     getUserDetails();
     super.initState();
   }
@@ -215,6 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onPress: () {},
                 iconData: LineAwesomeIcons.cog,
               ),
+              if(role == 'owner')
               ProfileMenu(
                 title: 'My Rooms',
                 onPress: () {

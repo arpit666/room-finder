@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:room_finder/screens/add_new_room/components/price_text_field.dart';
 import 'package:room_finder/screens/login_screen/components/my_textfield.dart';
 import 'package:room_finder/screens/profile_screen/profile_screen.dart';
 
@@ -195,10 +196,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    MyTextField(
-                        controller: numberController,
+                    PriceTextField(
+                        myController: numberController,
                         hintText: 'Phone No.',
-                        obscureText: false),
+                      isPrice:false,
+                        ),
 
                     SizedBox(
                       height: 20,

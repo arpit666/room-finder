@@ -407,6 +407,7 @@ class _ModifyRoomScreenState extends State<ModifyRoomScreen> {
                             PriceTextField(
                               myController: singlePriceController,
                               hintText: 'Single Room Price',
+                              isPrice:false
                             ),
                           SizedBox(
                             height: 10,
@@ -415,6 +416,7 @@ class _ModifyRoomScreenState extends State<ModifyRoomScreen> {
                             PriceTextField(
                               myController: doublePriceController,
                               hintText: 'Double Sharing Room Price',
+                                isPrice:false
                             ),
                           SizedBox(
                             height: 10,
@@ -423,6 +425,7 @@ class _ModifyRoomScreenState extends State<ModifyRoomScreen> {
                             PriceTextField(
                               myController: triplePriceController,
                               hintText: 'Triple Sharing Room Price',
+                                isPrice:false
                             ),
                           SizedBox(
                             height: 10,

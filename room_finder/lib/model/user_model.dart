@@ -8,13 +8,14 @@ class UserModel {
   late final String about;
   late final String pushToken;
   late final String userId;
+  late final String role;
 
   late final String image;
 
   late final List favRooms;
   late final List chatIds;
   UserModel({required this.userFullName,required this.userId,
-    required this.userEmail,required this.chatIds,
+    required this.userEmail,required this.chatIds,required this.role,
     required this.image,required this.userPhone,required this.about,required this.pushToken});
 
 
@@ -29,6 +30,7 @@ class UserModel {
     userFullName = json['name'] ?? '';
     pushToken =  json['pushToken'] ?? '';
     chatIds = json['chatIds'] ?? [];
+    role = json['role'] ??'';
 
   }
   Map<String, dynamic> toJson() {
@@ -42,6 +44,7 @@ class UserModel {
     data['favoriteRooms'] = favRooms ?? '';
     data['phone'] = userPhone ?? '';
     data['chatIds'] = chatIds;
+    data['role'] = role;
 
     return data;
   }

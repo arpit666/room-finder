@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Room {
   String title;
   bool hasSingle;
@@ -22,6 +24,12 @@ class Room {
   bool hasFKitchen;
   bool hasFParking;
   bool hasFPower;
+  int popularity;
+  Timestamp timestamp;
+
+  //
+  // bool isVerified;
+  // bool isRejected;
 
 
   Room(
@@ -47,8 +55,43 @@ class Room {
         required this.description,
         required this.propertySize,
         required this.userId,
-        required this.roomId
+        required this.roomId,
+        required this.popularity,
+        required this.timestamp,
+       // required this.isRejected,
+       // required this.isVerified
       });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'roomId': roomId,
+      'roomName': title,
+      'location': location,
+      'longitude': longitude,
+      'latitude': latitude,
+      'singlePrice': priceSingle,
+      'doublePrice': priceTwin,
+      'triplePrice':priceThree,
+      'hasFAirCond':hasFAirCond,
+      'hasFCCTV':hasFCCTV,
+      'hasFKitchen':hasFKitchen,
+      'hasFMeals':hasFMeals,
+      'hasFParking':hasFParking,
+      'hasFPower':hasFPower,
+      'property size':propertySize,
+      'description':description,
+      'imageUrls':imageUrl,
+      'ownerName':ownerName,
+      'ownerNumber':ownerNumber,
+      'userId':userId,
+      'popularity':popularity,
+      'timestamp':timestamp
+      // 'isVerified': isVerified,
+      // 'isRejected': isRejected,
+
+
+    };
+  }
 
   factory Room.fromMap(Map<String, dynamic> map) {
     return Room(
@@ -71,7 +114,11 @@ class Room {
       ownerName: map['ownerName'],
       ownerNumber: map['ownerNumber'],
       userId: map['userId'],
-      roomId: map['roomId']
+      roomId: map['roomId'],
+     popularity: map['popularity'],
+     timestamp: map['timestamp'],
+     // isRejected: map['isRejected'],
+      //isVerified: map['isVerified'],
 
 
     );
